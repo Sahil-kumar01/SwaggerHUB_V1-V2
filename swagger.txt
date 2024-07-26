@@ -1,0 +1,113 @@
+openapi: 3.0.0
+info:
+  version: 2.0.0
+  title: SmartBear HR API
+  description: An API that allows users to obtain information on existing employees or post info of new employees
+  termsOfService: https://smartbear.com/terms-of-use
+  contact:
+    name: Sahil Kumar
+    url: https://smartbear.com
+    email: sahilkumar.ktp16@gmail.com
+  license:
+    name: SmartBear License
+    url: https://license.foo.com
+
+servers: 
+  - url: https://dev.foo.com/v1
+    description: Dev server
+  - url: https://prod.foo.com/v1
+    description: Prod server
+
+paths:
+  /employees:
+    get:
+      description: Obtain information about employees from the HR database
+      parameters:
+        - name: bodylimit
+          in: query
+          description: The amount of employees returned
+          schema: 
+            type: integer
+            minimum: 10
+            maximum: 20
+            example: 15
+        - name: pagelimit
+          in: query
+          description: The pages to return employees info
+          schema: 
+            type: integer
+            minimum: 1
+            maximum: 5
+            example: 2
+      responses:
+        200:
+          description: Successful pull of employee info
+          content: 
+            application/json:
+              schema:
+               $ref: '#/components/schemas/Employees'
+               post:
+      description: Creates a new employee in the database
+      requestBody: 
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties: 
+                id:
+                  type: integer
+                  example: 4
+                employee_name:
+                  type: string
+                  example: Ryan Serora
+                employee_title:
+                  type: string
+                  example: Market Manager
+      responses:
+        200:
+          description: Successfully created a new employee
+
+  /employee/{id}:
+    get:
+      description: Obtain information about a specific employee
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: 
+            type: integer
+            example: 54
+      responses:
+        200:
+          description: Success
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/Employee'
+            application/xml:
+              schema:
+                type: object
+                $ref: '#/components/schemas/Employee'
+                    
+                    
+components:
+  schemas:
+    Employees:
+      description : Array of employee info
+      type : array 
+      items:
+        $ref :'#/components/schemas/Employee'
+    Employee:
+      description: Model containing employee info
+      properties: 
+        id:
+          type: integer
+          example: 4
+        employee_name:
+          type: string
+          example: Ryan Serora
+        employee_title:
+          type: string
+          example: Market Manager
